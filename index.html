@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>水手之歌 - 英语学习应用</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+// Fallback markdown parser if marked.js fails to load
+if (typeof marked === 'undefined') {
+console.warn('marked.js not loaded, using fallback parser');
+marked = {
+parse: function(text) {
+if (!text) return '';
+// Simple markdown parsing
+return text
+.replace(/^### (.+)$/gm, '<h3>$1</h3>')
+.replace(/^## (.+)$/gm, '<h2>$1</h2>')
+.replace(/^# (.+)$/gm, '<h1>$1</h1>')
+.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+.replace(/\*(.+?)\*/g, '<em>$1</em>')
+.replace(/`(.+?)`/g, '<code>$1</code>')
+.replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>')
+.replace(/^- (.+)$/gm, '<li>$1</li>')
+.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+.replace(/\n\n/g, '</p><p>')
+.replace(/^(?!<[hupb])/gm, '<p>')
+.replace(/([?!.])(?=[A-Z])/g, '$1</p><p>');
+}
+};
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary-fixed-dim": "#c4b5fd",
+        "primary": "#a78bfa",
+        "on-surface": "#fafafa",
+        "inverse-primary": "#5b21b6",
+        "on-primary-fixed-variant": "#5b21b6",
+        "on-primary": "#0a0012",
+        "secondary": "#71717a",
+        "tertiary": "#34d399",
+        "on-secondary": "#09090b",
+        "on-primary-fixed": "#2e1065",
+        "on-error-container": "#fca5a5",
+        "error-container": "#3b1111",
+        "on-primary-container": "#ede9fe",
+        "on-tertiary-fixed": "#003318",
+        "primary-container": "#7c3aed",
+        "outline": "#52525b",
+        "background": "#09090b",
+        "on-background": "#fafafa",
+        "tertiary-fixed": "#bbf7d0",
+        "surface-container-highest": "#1e1e22",
+        "secondary-container": "#27272a",
+        "surface-container-low": "#0f0f12",
+        "surface-container-high": "#18181b",
+        "secondary-fixed": "#a1a1aa",
+        "outline-variant": "#27272a",
+        "on-tertiary-fixed-variant": "#047857",
+        "on-tertiary-container": "#bbf7d0",
+        "on-tertiary": "#001a12",
+        "on-surface-variant": "#a1a1aa",
+        "tertiary-container": "#065f46",
+        "surface-container-lowest": "#09090b",
+        "error": "#ef4444",
+        "primary-fixed": "#ede9fe",
+        "surface": "#0c0c0f",
+        "surface-dim": "#0c0c0f",
+        "inverse-surface": "#fafafa",
+        "surface-variant": "#18181b",
+        "surface-tint": "#a78bfa",
+        "surface-container": "#121215"
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        full: "9999px"
+      },
+      fontFamily: {
+        headline: ["Geist"],
+        body: ["Geist"],
+        label: ["Geist"]
+      }
+    },
+  },
+}
+</script>
+<style>
+body { font-family: 'Geist', sans-serif; }
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+::selection {
+    background-color: #a78bfa;
+    color: #0a0012;
+}
+.article-content { line-height: 1.8; }
+.article-content p { margin-bottom: 1rem; }
+.article-content h1 { font-size: 2rem; font-weight: 800; margin: 1.5rem 0 1rem; }
+.article-content h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 1rem; border-bottom: 1px solid #27272a; padding-bottom: 0.5rem; }
+.article-content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.75rem; }
+.article-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+.article-content blockquote { 
+    border-left: 4px solid #a78bfa; 
+    padding: 0.75rem 1rem; 
+    margin: 1rem 0;
+    background: rgba(167, 139, 250, 0.05);
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+.article-content blockquote p { margin-bottom: 0; color: #a1a1aa; font-style: italic; }
+.article-content ul, .article-content ol { margin: 1rem 0; padding-left: 1.5rem; }
+.article-content li { margin-bottom: 0.5rem; }
+.article-content ul li { list-style-type: disc; }
+.article-content ol li { list-style-type: decimal; }
+.article-content code { 
+    background: rgba(167, 139, 250, 0.1); 
+    padding: 0.15rem 0.4rem; 
+    border-radius: 0.25rem; 
+    font-family: monospace;
+    font-size: 0.9em;
+    color: #c4b5fd;
+}
+.article-content pre { 
+    background: #121215; 
+    padding: 1rem; 
+    border-radius: 0.5rem; 
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #27272a;
+}
+.article-content pre code { 
+    background: none; 
+    padding: 0; 
+    color: #fafafa;
+}
+.article-content hr {
+    border: none;
+    border-top: 1px solid #27272a;
+    margin: 2rem 0;
+}
+.article-content strong { font-weight: 700; color: #fafafa; }
+.article-content em { font-style: italic; color: #c4b5fd; }
+.article-content a { color: #a78bfa; text-decoration: underline; }
+.article-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.article-content th, .article-content td { border: 1px solid #27272a; padding: 0.5rem; text-align: left; }
+.article-content th { background: #18181b; font-weight: 600; }
+.word-highlight {
+    background-color: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    border-bottom: 1px solid #a78bfa;
+    cursor: pointer;
+    padding: 0 2px;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+.word-highlight:hover {
+    background-color: rgba(167, 139, 250, 0.3);
+}
+.page { display: none; }
+.page.active { display: block; }
+</style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#09090b] border-b border-[#27272a] flex justify-between items-center px-6 py-3">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-[#fafafa]">sailor-song</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="nav-link text-[#a1a1aa] hover:text-[#fafafa] tracking-tight transition-colors duration-200" data-page="home">首页</a>
+<a class="nav-link text-[#a1a1aa] hover:text-[#fafafa] tracking-tight transition-colors duration-200" data-page="reading">阅读</a>
+<a class="nav-link text-[#a1a1aa] hover:text-[#fafafa] tracking-tight transition-colors duration-200" data-page="vocabulary">单词本</a>
+<a class="nav-link text-[#a1a1aa] hover:text-[#fafafa] tracking-tight transition-colors duration-200" data-page="quiz">测试</a>
+</nav>
+</div>
+</nav>
+
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-[#0c0c0f] border-r border-[#27272a] pt-20 z-40">
+<div class="px-6 py-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<p class="text-sm font-bold text-[#fafafa]">学习者</p>
+<p class="text-[10px] text-secondary uppercase tracking-widest">持续进步中</p>
+</div>
+</div>
+<nav class="mt-4 px-3 flex-1 space-y-1">
+<div class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a78bfa] bg-[#18181b] border-r-2 border-[#a78bfa] cursor-pointer transition-all" data-page="home">
+<span class="material-symbols-outlined">home</span>
+<span class="text-sm font-medium">首页</span>
+</div>
+<div class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a1a1aa] hover:bg-[#18181b] hover:text-[#fafafa] cursor-pointer transition-all" data-page="reading">
+<span class="material-symbols-outlined">book_5</span>
+<span class="text-sm font-medium">阅读</span>
+</div>
+<div class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a1a1aa] hover:bg-[#18181b] hover:text-[#fafafa] cursor-pointer transition-all" data-page="vocabulary">
+<span class="material-symbols-outlined">style</span>
+<span class="text-sm font-medium">单词本</span>
+</div>
+<div class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a1a1aa] hover:bg-[#18181b] hover:text-[#fafafa] cursor-pointer transition-all" data-page="quiz">
+<span class="material-symbols-outlined">quiz</span>
+<span class="text-sm font-medium">测试</span>
+</div>
+</nav>
+<div class="p-4 border-t border-[#27272a]">
+<div class="text-xs text-[#71717a]">
+<p>已学习 <span id="stats-total" class="text-primary font-bold">0</span> 词</p>
+<p>今日新词 <span id="stats-today" class="text-tertiary font-bold">0</span></p>
+</div>
+</div>
+</aside>
+
+<!-- ============ HOME PAGE ============ -->
+<main id="page-home" class="page active md:ml-64 pt-24 pb-12 px-6 lg:px-12">
+<div class="max-w-6xl mx-auto">
+<!-- Hero Section -->
+<section class="mb-12">
+<div class="relative overflow-hidden rounded-3xl bg-surface-container border border-outline-variant p-8 md:p-12 flex flex-col items-center text-center">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-tertiary/10 blur-[100px] rounded-full"></div>
+<div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 border border-primary/30">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-black tracking-tighter text-on-surface mb-4">通过精准学习掌握英语</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl mb-8 leading-relaxed">
+阅读精选内容，积累词汇，通过测验检验学习成果。
+</p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="nav-btn px-8 py-3 bg-primary text-on-primary font-bold rounded-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" data-page="reading">
+开始阅读
+</button>
+<button class="nav-btn px-8 py-3 bg-transparent border border-outline-variant text-on-surface font-bold rounded-lg hover:bg-surface-container-high active:scale-95 transition-all" data-page="vocabulary">
+查看单词本
+</button>
+</div>
+</div>
+</section>
+
+<!-- Quick Stats -->
+<section class="mb-12">
+<h2 class="text-2xl font-black tracking-tighter text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">insights</span>
+学习概览
+</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 rounded-xl bg-surface-container border border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">style</span>
+</div>
+<div>
+<p class="text-sm text-[#a1a1aa]">单词总量</p>
+<p class="text-3xl font-black text-[#fafafa]" id="home-total-words">0</p>
+</div>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container border border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+<div>
+<p class="text-sm text-[#a1a1aa]">已掌握</p>
+<p class="text-3xl font-black text-tertiary" id="home-mastered">0</p>
+</div>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container border border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">pending</span>
+</div>
+<div>
+<p class="text-sm text-[#a1a1aa]">待复习</p>
+<p class="text-3xl font-black text-secondary" id="home-review">0</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Recent Articles -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-black tracking-tighter text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+精选文章
+</h2>
+<button class="nav-link text-primary text-sm font-bold hover:underline" data-page="reading">查看全部</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="home-articles">
+<!-- Articles will be loaded here -->
+</div>
+</section>
+</div>
+</main>
+
+<!-- ============ READING PAGE ============ -->
+<main id="page-reading" class="page md:ml-64 pt-24 pb-12 px-6 lg:px-12">
+<div class="max-w-7xl mx-auto">
+<!-- Article List View -->
+<div id="reading-list" class="max-w-6xl mx-auto">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-3xl font-black tracking-tighter text-on-surface">阅读文章</h2>
+<span class="text-sm text-[#a1a1aa]" id="article-count">加载中...</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="articles-grid">
+<!-- Articles will be loaded here -->
+</div>
+</div>
+
+<!-- Article Reading View -->
+<div id="reading-view" class="hidden max-w-6xl mx-auto">
+<button class="mb-6 flex items-center gap-2 text-[#a1a1aa] hover:text-[#fafafa] transition-colors" onclick="showReadingList()">
+<span class="material-symbols-outlined">arrow_back</span>
+返回文章列表
+</button>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<article class="lg:col-span-8 space-y-6">
+<header class="space-y-4">
+<div class="flex flex-wrap items-center gap-3">
+<span class="px-2 py-0.5 bg-tertiary-container text-tertiary text-[10px] font-bold uppercase tracking-wider rounded border border-tertiary/20">中高级 B2</span>
+<span class="flex items-center gap-1 text-secondary text-xs"><span class="material-symbols-outlined text-xs">schedule</span><span id="read-time">5</span> 分钟</span>
+<span class="flex items-center gap-1 text-secondary text-xs"><span class="material-symbols-outlined text-xs">notes</span><span id="word-count">0</span> 词</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-black tracking-tighter text-on-background leading-tight" id="article-title"></h1>
+</header>
+<div id="article-content" class="article-content text-lg text-on-surface leading-relaxed">
+<!-- Article text will be loaded here -->
+</div>
+</article>
+
+<!-- Side Panel -->
+<aside class="lg:col-span-4">
+<div class="sticky top-24 space-y-6">
+<!-- Word Selection Panel -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-5 shadow-2xl">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary">划词助手</h3>
+<span class="material-symbols-outlined text-primary text-sm">translate</span>
+</div>
+<div id="word-panel-content">
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant text-center">
+<p class="text-sm text-[#71717a]">选择文章中的单词查看释义</p>
+</div>
+</div>
+</div>
+
+<!-- Vocabulary Annotation Card -->
+<div id="vocab-annotation-card" class="bg-surface-container border border-outline-variant rounded-xl p-5 hidden">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary">词汇注释</h3>
+<span class="material-symbols-outlined text-tertiary text-sm">book</span>
+</div>
+<div id="vocab-annotation-content">
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant text-center">
+<p class="text-sm text-[#71717a]">点击高亮词汇查看注释</p>
+</div>
+</div>
+</div>
+
+</div>
+</aside>
+</div>
+</div>
+</main>
+
+<!-- ============ VOCABULARY PAGE ============ -->
+<main id="page-vocabulary" class="page md:ml-64 pt-24 pb-24 md:pt-8 px-6">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="text-3xl font-black tracking-tight text-[#fafafa]">单词仓库</h2>
+<p class="text-[#a1a1aa] mt-1">管理并追踪您的词汇增长。</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-lg border border-outline-variant text-[#a1a1aa] hover:bg-surface-container-high hover:text-[#fafafa] transition-colors flex items-center gap-2 text-sm font-medium" onclick="exportVocabulary()">
+<span class="material-symbols-outlined text-sm">download</span>导出
+</button>
+<button class="px-4 py-2 rounded-lg border border-error/30 text-error hover:bg-error/10 transition-colors flex items-center gap-2 text-sm font-medium" onclick="clearVocabulary()">
+<span class="material-symbols-outlined text-sm">delete_sweep</span>清空
+</button>
+</div>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-5 rounded-xl bg-surface-container border border-outline-variant">
+<p class="text-xs font-medium text-[#a1a1aa] uppercase tracking-wider">单词总量</p>
+<div class="mt-2 flex items-end gap-2">
+<span class="text-3xl font-black text-[#fafafa]" id="vocab-total">0</span>
+<span class="text-xs text-tertiary font-bold mb-1" id="vocab-today-badge">今日 +0</span>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-surface-container border border-outline-variant">
+<p class="text-xs font-medium text-[#a1a1aa] uppercase tracking-wider">已掌握</p>
+<div class="mt-2 flex items-end gap-2">
+<span class="text-3xl font-black text-tertiary" id="vocab-mastered">0</span>
+<div class="w-full bg-outline-variant h-1 rounded-full mb-2">
+<div class="bg-tertiary h-1 rounded-full" id="mastered-bar" style="width: 0%"></div>
+</div>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-surface-container border border-outline-variant">
+<p class="text-xs font-medium text-[#a1a1aa] uppercase tracking-wider">复习中</p>
+<div class="mt-2 flex items-end gap-2">
+<span class="text-3xl font-black text-primary" id="vocab-review">0</span>
+<span class="material-symbols-outlined text-primary mb-1">pending_actions</span>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-surface-container border border-outline-variant">
+<p class="text-xs font-medium text-[#a1a1aa] uppercase tracking-wider">新词</p>
+<div class="mt-2 flex items-end gap-2">
+<span class="text-3xl font-black text-secondary-fixed" id="vocab-new">0</span>
+</div>
+</div>
+</div>
+
+<!-- Search -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input id="vocab-search" class="w-full bg-surface-container border border-outline-variant rounded-xl py-4 pl-12 pr-4 text-[#fafafa] placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="搜索您的单词库..." type="text" oninput="filterVocabulary()"/>
+</div>
+
+<!-- Vocabulary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="vocab-list">
+<!-- Words will be loaded here -->
+</div>
+</div>
+</main>
+
+<!-- ============ QUIZ PAGE ============ -->
+<main id="page-quiz" class="page md:ml-64 pt-24 pb-24 md:pt-8 px-6">
+<div class="max-w-4xl mx-auto">
+<!-- Quiz Container - dynamically shows different content -->
+<div id="quiz-container">
+<!-- Quiz Setup Screen -->
+<div id="quiz-screen-setup">
+<div class="text-center mb-8">
+<div class="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">quiz</span>
+</div>
+<h2 class="text-3xl font-black tracking-tight text-[#fafafa]">词汇测验</h2>
+<p class="text-[#a1a1aa] mt-2">检验您的学习成果</p>
+</div>
+
+<div class="p-8 rounded-xl bg-surface-container border border-outline-variant">
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div>
+<p class="text-sm text-[#a1a1aa] mb-2">测验单词数量</p>
+<select id="quiz-count" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-primary/50">
+<option value="5">5 题</option>
+<option value="10" selected>10 题</option>
+<option value="20">20 题</option>
+<option value="all">全部 (<span id="quiz-total-available">0</span>)</option>
+</select>
+</div>
+<div>
+<p class="text-sm text-[#a1a1aa] mb-2">测验模式</p>
+<select id="quiz-mode" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-primary/50">
+<option value="recall">回忆释义</option>
+<option value="spell">拼写测试</option>
+</select>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors active:scale-[0.98]" onclick="startQuiz()">
+开始测验
+</button>
+</div>
+</div>
+
+<!-- Quiz Active Screen -->
+<div id="quiz-screen-active" style="display:none;">
+<div class="space-y-6 mb-6">
+<div class="flex items-center justify-between">
+<span class="text-sm text-[#a1a1aa]">问题 <span id="quiz-current" class="text-primary font-bold">1</span> / <span id="quiz-total">10</span></span>
+<span class="px-3 py-1 rounded-full bg-tertiary/10 border border-tertiary/20 text-tertiary text-sm font-bold" id="quiz-score">正确: 0</span>
+</div>
+<div class="w-full h-2 bg-secondary-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full transition-all" id="quiz-progress-bar" style="width: 10%"></div>
+</div>
+</div>
+
+<div class="p-8 rounded-xl bg-surface-container border border-outline-variant">
+<div class="text-center mb-8">
+<p class="text-sm text-[#a1a1aa] uppercase tracking-wider mb-2">请写出这个单词的意思</p>
+<h3 class="text-4xl font-black tracking-tight text-[#fafafa]" id="quiz-word">Loading...</h3>
+<p class="text-sm text-[#71717a] mt-2 italic" id="quiz-example"></p>
+</div>
+
+<div id="quiz-input-area" class="space-y-4">
+<input id="quiz-answer" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-6 py-4 text-xl text-[#fafafa] placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="输入您的答案..." type="text" autocomplete="off"/>
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors active:scale-[0.98]" onclick="submitQuizAnswer()">
+提交答案
+</button>
+</div>
+
+<div id="quiz-result-area" style="display:none;" class="text-center space-y-4">
+<div id="quiz-result-icon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+</div>
+<p id="quiz-result-text" class="text-xl font-bold"></p>
+<p id="quiz-correct-answer" class="text-[#a1a1aa]"></p>
+<button class="px-8 py-3 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors" onclick="nextQuestion()">
+下一题
+</button>
+</div>
+</div>
+</div>
+
+<!-- Quiz Complete Screen -->
+<div id="quiz-screen-complete" style="display:none;">
+<div class="text-center space-y-8">
+<div class="p-12 rounded-3xl bg-surface-container border border-outline-variant">
+<div class="w-24 h-24 bg-tertiary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-tertiary text-5xl" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<h2 class="text-3xl font-black tracking-tight text-[#fafafa]">测验完成!</h2>
+<p class="text-[#a1a1aa] mt-2">您的表现</p>
+<div class="mt-8 space-y-4">
+<div class="flex justify-between items-center p-4 rounded-lg bg-surface-container-low">
+<span class="text-[#a1a1aa]">正确率</span>
+<span class="text-2xl font-black text-tertiary" id="final-score">0%</span>
+</div>
+<div class="flex justify-between items-center p-4 rounded-lg bg-surface-container-low">
+<span class="text-[#a1a1aa]">答对题数</span>
+<span class="text-2xl font-black text-[#fafafa]" id="final-correct">0 / 0</span>
+</div>
+</div>
+</div>
+<button class="px-8 py-4 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors" onclick="resetQuiz()">
+再测一次
+</button>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-high border-t border-outline-variant px-4 py-2 flex justify-around items-center z-50">
+<a class="mobile-nav flex flex-col items-center gap-1 p-2 text-[#a1a1aa]" data-page="home">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">首页</span>
+</a>
+<a class="mobile-nav flex flex-col items-center gap-1 p-2 text-[#a1a1aa]" data-page="reading">
+<span class="material-symbols-outlined">book_5</span>
+<span class="text-[10px] font-medium">阅读</span>
+</a>
+<a class="mobile-nav flex flex-col items-center gap-1 p-2 text-[#a1a1aa]" data-page="vocabulary">
+<span class="material-symbols-outlined">style</span>
+<span class="text-[10px] font-medium">单词本</span>
+</a>
+<a class="mobile-nav flex flex-col items-center gap-1 p-2 text-[#a1a1aa]" data-page="quiz">
+<span class="material-symbols-outlined">quiz</span>
+<span class="text-[10px] font-medium">测试</span>
+</a>
+</nav>
+
+<!-- Add Word Modal -->
+<div id="add-word-modal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center p-4">
+<div class="bg-surface-container border border-outline-variant rounded-2xl w-full max-w-md p-6 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-[#fafafa]">添加到单词本</h3>
+<button onclick="closeAddWordModal()" class="text-[#a1a1aa] hover:text-[#fafafa]">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-sm text-[#a1a1aa] mb-2">单词</label>
+<input id="modal-word" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-primary/50" type="text"/>
+</div>
+<div>
+<label class="block text-sm text-[#a1a1aa] mb-2">释义</label>
+<textarea id="modal-definition" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-primary/50 h-24 resize-none" placeholder="输入单词的中文释义..."></textarea>
+</div>
+<div>
+<label class="block text-sm text-[#a1a1aa] mb-2">例句（可选）</label>
+<input id="modal-example" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-primary/50" type="text" placeholder="输入例句..."/>
+</div>
+</div>
+<button onclick="saveWord()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors">
+保存到单词本
+</button>
+</div>
+</div>
+
+<script>
+// ============ SAMPLE ARTICLES (Built-in for demo) ============
+const sampleArticles = [
+{
+title: "The Exciting End to NFL Regular Season",
+content: `The NFL regular season has reached its thrilling conclusion, with playoff spots hanging in the balance across the league.
+
+As the final week approached, multiple teams were fighting desperately for the few remaining playoff berths. The competition was fierce, with every game carrying enormous implications for each team's Super Bowl aspirations.
+
+Teams that had dominated throughout the season secured their positions with authority. Quarterbacks delivered spectacular performances, showcasing the extraordinary talent that defines professional football at its highest level.
+
+The atmosphere in stadiums across America was electric. Fans gathered in unprecedented numbers, their voices creating a cacophony of support that pushed their teams forward.
+
+Coach strategies became increasingly aggressive as coaches pushed their players to the limit in pursuit of victory. The combination of skill, determination, and strategic brilliance made for compelling viewing.
+
+The regular season finale promises to be remembered as one of the most exciting in recent memory. With the playoffs on the horizon, teams will need to maintain their momentum if they hope to compete for the ultimate prize.
+
+As we look ahead to the postseason, one thing is certain: the level of competition will only intensify. Every game from this point forward is win or go home, and the teams best prepared will emerge victorious.`,
+level: "intermediate",
+image: "football"
+},
+{
+title: "The Future of Emojis Under Review",
+content: `Unicode, the organization responsible for standardizing characters across digital platforms, has announced a comprehensive review of potential new emojis.
+
+The proposal process involves careful consideration of cultural sensitivity, technical feasibility, and widespread appeal. Each candidate must demonstrate genuine need and utility in digital communication.
+
+Proposed additions include a variety of diverse and inclusive symbols designed to represent the global community more accurately. The committee receives thousands of submissions each year, but only a select few make it through the rigorous evaluation process.
+
+Users worldwide have expressed strong opinions about which emojis they believe are essential. From professions to food items, the range of suggestions reflects the diverse needs of global communication.
+
+The review process typically takes several years, allowing ample time for deliberation and refinement. This ensures that final selections meet the highest standards of design and usability.
+
+Technical implementation across different platforms and operating systems presents significant challenges. Each new emoji must be carefully designed to work seamlessly across devices.
+
+As digital communication continues to evolve, emojis have become an integral part of how we express emotions and convey meaning. Their continued development reflects our changing world and growing understanding of diverse perspectives.`,
+level: "intermediate",
+image: "emoji"
+},
+{
+title: "Government to Fund Wildlife Crossings",
+content: `In an unprecedented environmental initiative, the government has committed substantial funding to construct wildlife crossings across major highways.
+
+These structures, designed to allow animals to safely traverse busy roadways, represent a crucial step in protecting biodiversity and reducing vehicle-animal collisions.
+
+Studies have shown that properly designed wildlife crossings can reduce accident rates by up to 90 percent. They also help maintain genetic diversity among animal populations by allowing natural movement patterns to continue.
+
+The project will span multiple states and ecosystems, with engineers working alongside wildlife biologists to identify optimal locations and designs. Each crossing will be tailored to the specific species in the area.
+
+Community support has been overwhelming, with local residents recognizing both the safety and environmental benefits. Property values near crossings have been shown to increase, and wildlife observation opportunities have attracted nature enthusiasts.
+
+The initiative also includes the installation of warning systems to alert drivers to animal presence. These technological additions complement the physical crossings and provide additional protection.
+
+Environmental advocates praise the move as a model for balancing infrastructure development with ecological preservation. Similar projects in other countries have demonstrated remarkable success in protecting vulnerable species.`,
+level: "intermediate",
+image: "wildlife"
+},
+{
+title: "Is It OK to Have a Messy Bedroom?",
+content: `The age-old debate about bedroom tidiness has gained new attention as psychologists weigh in on the mental health implications of our living spaces.
+
+Research suggests that cluttered environments can contribute to increased stress and anxiety. However, the relationship between tidiness and mental well-being is more nuanced than many assume.
+
+For some individuals, a messy room represents creativity and comfort. Imposing strict order can actually hinder creative thinking and make a space feel unwelcoming.
+
+The concept of "productive clutter" recognizes that not all mess is harmful. Papers on a desk might indicate active projects and engagement with work. A unmade bed might reflect a prioritization of sleep over appearance.
+
+Organizational experts recommend finding a personal balance rather than adhering to rigid standards. What matters most is that the space serves its inhabitants well.
+
+Cultural perspectives vary significantly on this topic. Some cultures view visible possessions as a sign of prosperity, while others emphasize minimalism and spatial clarity.
+
+The key is self-awareness: understanding how your environment affects your mood and productivity, then making intentional choices that support your well-being. A clean space isn't inherently virtuous, nor is chaos a moral failing.`,
+level: "beginner",
+image: "room"
+},
+{
+title: "Rare Wolves May Pollinate Plants",
+content: `Scientists have made a remarkable discovery: gray wolves may play an unexpected role in plant pollination through their interactions with the ecosystem.
+
+While wolves are not traditional pollinators, researchers have observed wolves carrying pollen on their fur after moving through flower-dense areas. This incidental contact could contribute to cross-pollination.
+
+The finding highlights the complex web of relationships within healthy ecosystems. Every species, even apex predators, contributes to the delicate balance of nature in ways we are still discovering.
+
+Wolves shape their environment through various mechanisms. They control prey populations, which in turn affects vegetation. Their movements create trails that other animals use, potentially spreading seeds and pollen along the way.
+
+Ecologists emphasize that this discovery underscores the importance of preserving apex predators. Their influence extends far beyond what we might initially expect.
+
+The research was conducted in Yellowstone National Park, where wolf reintroduction has had documented cascading effects on the entire ecosystem. This latest finding adds another layer to our understanding.
+
+Protecting wolves means protecting entire ecosystems. Their presence maintains the natural order that has evolved over millennia, supporting countless species in ways both obvious and subtle.`,
+level: "advanced",
+image: "nature"
+},
+{
+title: "A Series About Insects Returns",
+content: `The acclaimed nature documentary series exploring the fascinating world of insects has returned for a new season, bringing viewers closer to the miniature world than ever before.
+
+Advances in macro photography technology have allowed filmmakers to capture insects in unprecedented detail. Viewers can now observe the intricate structures and behaviors of creatures typically too small to appreciate.
+
+Each episode focuses on different species, highlighting their unique adaptations and the crucial roles they play in ecosystems worldwide. From pollinators to decomposers, insects are essential to life on Earth.
+
+The production team traveled to all seven continents, documenting over 500 species. Their footage reveals behaviors never before captured on camera, offering new insights into insect behavior.
+
+Interviews with leading entomologists provide scientific context for the visual spectacle. Viewers learn not just what insects do, but why they evolved to behave in such remarkable ways.
+
+The series also addresses the critical issue of insect population decline. Pesticides, habitat loss, and climate change pose serious threats to many species. The filmmakers hope their work will inspire conservation efforts.
+
+Insects are the unsung heroes of our planet, performing essential services that humans often take for granted. This series aims to change perceptions and foster appreciation for these remarkable creatures.`,
+level: "intermediate",
+image: "insect"
+},
+{
+title: "Should We Make New Year's Resolutions?",
+content: `As the clock strikes midnight on December 31st, millions of people worldwide embark on a tradition as old as time: making New Year's resolutions.
+
+Research suggests that approximately 80% of resolutions fail by the second week of February. This phenomenon leads many to question whether the practice is inherently flawed or if our approach requires a fundamental shift.
+
+The concept of the "Fresh Start Effect" explains why we feel more motivated at the beginning of cycles. These temporal landmarks allow us to distance ourselves from past mistakes and view our future selves with renewed optimism.
+
+To make resolutions stick, experts recommend breaking down large ambitions into tiny, manageable actions. Instead of "mastering English," one might resolve to "read one article every morning." The specificity reduces cognitive load and makes consistency more achievable.
+
+Accountability plays a crucial role in success. Sharing goals with friends or joining communities with similar objectives significantly increases follow-through rates.
+
+The key is setting realistic expectations and celebrating small victories along the way. Progress, not perfection, should be the measure of success.
+
+Perhaps the real value of New Year's resolutions lies not in their completion, but in the reflection and intention-setting they inspire. Whether we achieve our specific goals or not, the process of envisioning our best selves is inherently valuable.`,
+level: "intermediate",
+image: "resolution"
+},
+{
+title: "The Week Junior Art Exploration",
+content: `Art education for young people has evolved significantly in recent years, with new approaches making creative expression more accessible and engaging than ever before.
+
+Traditional art classes often focused on technical skill development, but modern pedagogy emphasizes experimentation and self-expression. Students are encouraged to explore various mediums without fear of making mistakes.
+
+Digital tools have opened new possibilities for young artists. From drawing tablets to animation software, technology provides additional avenues for creativity and skill development.
+
+Art therapy has gained recognition as a valuable approach for helping young people process emotions and develop self-awareness. Creating art can be a powerful tool for communication and healing.
+
+Museums and galleries are increasingly offering programs designed specifically for children and teenagers. These experiences help young people engage with art in meaningful ways that complement classroom instruction.
+
+Community art projects provide opportunities for collaborative creativity. Young artists work together on murals, sculptures, and installations that beautify neighborhoods and build community pride.
+
+The benefits of art education extend beyond creativity itself. Studies show that students who participate in artistic activities demonstrate improved academic performance, better concentration, and enhanced social skills.`,
+level: "beginner",
+image: "art"
+},
+{
+title: "Wildfires Devastate California",
+content: `Devastating wildfires continue to sweep through California, destroying homes and displacing thousands of residents across the state.
+
+Firefighters are working around the clock to contain the blazes, but strong winds and dry conditions continue to fuel the fires' spread. The situation remains critical in several regions.
+
+Climate scientists link the increasing frequency and intensity of wildfires to prolonged drought conditions and rising temperatures. These factors create ideal conditions for fires to start and spread rapidly.
+
+Evacuation orders have been issued for numerous communities, with emergency shelters operating at capacity. The displacement has created significant challenges for affected families.
+
+The economic impact of the wildfires extends beyond direct property damage. Business closures, tourism decline, and long-term environmental effects will be felt for years to come.
+
+Community resilience has emerged as a bright spot amid the devastation. Neighbors are helping neighbors, and volunteers have mobilized to provide support where government resources fall short.
+
+Prevention and preparedness remain crucial priorities. Fire-resistant building materials, defensible space around properties, and early warning systems can help mitigate future damage.`,
+level: "intermediate",
+image: "fire"
+}
+];
+
+// ============ APP STATE ============
+let vocabulary = [];
+let currentArticle = null;
+let selectedWord = '';
+let selectedDefinition = '';
+let selectedExample = '';
+
+// Quiz state
+let quizWords = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizResults = []; // Store each question's result: true=correct, false=wrong
+let quizTotal = 0;
+let quizMode = 'recall';
+
+// ============ INITIALIZATION ============
+document.addEventListener('DOMContentLoaded', async function() {
+loadVocabulary();
+setupNavigation();
+await loadArticles();
+renderVocabulary(); // Initialize vocabulary display and quiz counts
+updateStats();
+});
+
+// ============ NAVIGATION ============
+function setupNavigation() {
+document.querySelectorAll('.nav-link, .nav-item, .mobile-nav, .nav-btn').forEach(el => {
+el.addEventListener('click', function(e) {
+e.preventDefault();
+const page = this.dataset.page;
+navigateTo(page);
+});
+});
+}
+
+function navigateTo(page) {
+// Update pages
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+// Update nav items
+document.querySelectorAll('.nav-link, .nav-item, .mobile-nav').forEach(n => {
+n.classList.remove('text-[#a78bfa]', 'bg-[#18181b]', 'border-r-2', 'border-[#a78bfa]');
+n.classList.add('text-[#a1a1aa]');
+});
+
+document.querySelectorAll(`[data-page="${page}"]`).forEach(n => {
+n.classList.remove('text-[#a1a1aa]');
+n.classList.add('text-[#a78bfa]', 'bg-[#18181b]');
+if (n.classList.contains('nav-item')) {
+n.classList.add('border-r-2', 'border-[#a78bfa]');
+}
+});
+
+// Mobile nav special handling
+document.querySelectorAll('.mobile-nav').forEach(n => {
+if (n.dataset.page === page) {
+n.classList.remove('text-[#a1a1aa]');
+n.classList.add('text-[#a78bfa]');
+} else {
+n.classList.remove('text-[#a78bfa]');
+n.classList.add('text-[#a1a1aa]');
+}
+});
+
+// Special handling for quiz page - ensure it shows
+const pageElement = document.getElementById(`page-${page}`);
+if (pageElement) {
+pageElement.classList.add('active');
+} else {
+console.error('Page element not found:', `page-${page}`);
+}
+
+// Reset quiz if navigating away
+if (page !== 'quiz') {
+resetQuiz();
+}
+
+// Reset reading page state when navigating to other pages
+if (page !== 'reading') {
+showReadingList();
+}
+
+updateStats();
+}
+
+// ============ VOCABULARY MANAGEMENT ============
+function loadVocabulary() {
+const stored = localStorage.getItem('en_study_vocabulary');
+if (stored) {
+vocabulary = JSON.parse(stored);
+}
+}
+
+function saveVocabulary() {
+localStorage.setItem('en_study_vocabulary', JSON.stringify(vocabulary));
+updateStats();
+}
+
+function addToVocabulary(word, definition, example) {
+const existingIndex = vocabulary.findIndex(v => v.word.toLowerCase() === word.toLowerCase());
+if (existingIndex >= 0) {
+vocabulary[existingIndex].definition = definition;
+if (example) vocabulary[existingIndex].example = example;
+vocabulary[existingIndex].updatedAt = Date.now();
+} else {
+vocabulary.push({
+id: Date.now(),
+word: word,
+definition: definition,
+example: example || '',
+mastery: 0,
+addedAt: Date.now(),
+updatedAt: Date.now()
+});
+}
+saveVocabulary();
+renderVocabulary();
+}
+
+function removeWord(id) {
+vocabulary = vocabulary.filter(v => v.id !== id);
+saveVocabulary();
+renderVocabulary();
+}
+
+function updateWordMastery(id, increase) {
+const word = vocabulary.find(v => v.id === id);
+if (word) {
+word.mastery = Math.max(0, Math.min(4, word.mastery + increase));
+word.updatedAt = Date.now();
+saveVocabulary();
+renderVocabulary();
+}
+}
+
+function filterVocabulary() {
+const query = document.getElementById('vocab-search').value.toLowerCase();
+const filtered = vocabulary.filter(v => 
+v.word.toLowerCase().includes(query) || 
+v.definition.toLowerCase().includes(query)
+);
+renderVocabularyList(filtered);
+}
+
+function renderVocabulary() {
+const quizTotalEl = document.getElementById('quiz-total-available');
+if (quizTotalEl) {
+quizTotalEl.textContent = vocabulary.length;
+}
+
+const total = vocabulary.length;
+const mastered = vocabulary.filter(v => v.mastery >= 4).length;
+const reviewing = vocabulary.filter(v => v.mastery > 0 && v.mastery < 4).length;
+const newWords = vocabulary.filter(v => v.mastery === 0).length;
+
+document.getElementById('vocab-total').textContent = total;
+document.getElementById('vocab-mastered').textContent = mastered;
+document.getElementById('vocab-review').textContent = reviewing;
+document.getElementById('vocab-new').textContent = newWords;
+
+document.getElementById('mastered-bar').style.width = total > 0 ? (mastered / total * 100) + '%' : '0%';
+
+// Today count
+const today = new Date().setHours(0,0,0,0);
+const todayAdded = vocabulary.filter(v => v.addedAt >= today).length;
+document.getElementById('vocab-today-badge').textContent = `今日 +${todayAdded}`;
+
+renderVocabularyList(vocabulary);
+}
+
+function renderVocabularyList(words) {
+const container = document.getElementById('vocab-list');
+
+if (words.length === 0) {
+container.innerHTML = `
+<div class="col-span-2 text-center py-12">
+<span class="material-symbols-outlined text-[#52525b] text-5xl">inventory_2</span>
+<p class="text-[#71717a] mt-4">单词本为空</p>
+<p class="text-sm text-[#52525b] mt-2">开始阅读文章，添加新单词</p>
+</div>
+`;
+return;
+}
+
+container.innerHTML = words.map(word => {
+const statusClass = word.mastery >= 4 ? 'bg-tertiary/10 border-tertiary/20 text-tertiary' : 
+word.mastery > 0 ? 'bg-primary/10 border-primary/20 text-primary' : 
+'bg-outline-variant border-outline text-[#a1a1aa]';
+const statusText = word.mastery >= 4 ? '已掌握' : word.mastery > 0 ? '复习中' : '新词';
+
+const dots = Array(4).fill(0).map((_, i) => 
+`<div class="w-2 h-2 rounded-full ${i < word.mastery ? 'bg-tertiary' : 'bg-outline-variant'}"></div>`
+).join('');
+
+const timeAgo = getTimeAgo(word.updatedAt);
+
+return `
+<div class="group p-6 rounded-xl bg-surface-container border border-outline-variant hover:border-primary/50 transition-all flex flex-col gap-4 relative">
+<div class="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-[#a1a1aa] hover:text-error" onclick="removeWord(${word.id})">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-3">
+<h3 class="text-2xl font-bold text-[#fafafa] tracking-tight">${word.word}</h3>
+</div>
+</div>
+<div class="px-3 py-1 rounded-full ${statusClass} text-[10px] font-bold uppercase tracking-widest">${statusText}</div>
+</div>
+<div class="space-y-2">
+<p class="text-[#fafafa] leading-relaxed">${word.definition}</p>
+${word.example ? `<p class="text-sm text-outline italic">"${word.example}"</p>` : ''}
+</div>
+<div class="mt-2 pt-4 border-t border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-xs text-outline">掌握进度</span>
+<div class="flex gap-1">${dots}</div>
+</div>
+<span class="text-xs text-outline">${timeAgo}</span>
+</div>
+<div class="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="flex-1 py-2 text-xs rounded-lg bg-tertiary/10 border border-tertiary/20 text-tertiary hover:bg-tertiary/20 transition-colors" onclick="updateWordMastery(${word.id}, 1)">
+掌握 <span class="material-symbols-outlined text-xs align-middle">thumb_up</span>
+</button>
+<button class="flex-1 py-2 text-xs rounded-lg bg-error/10 border border-error/20 text-error hover:bg-error/20 transition-colors" onclick="updateWordMastery(${word.id}, -1)">
+忘记 <span class="material-symbols-outlined text-xs align-middle">thumb_down</span>
+</button>
+</div>
+</div>
+`;
+}).join('');
+}
+
+function clearVocabulary() {
+if (confirm('确定要清空所有单词吗？此操作不可撤销。')) {
+vocabulary = [];
+saveVocabulary();
+renderVocabulary();
+}
+}
+
+function exportVocabulary() {
+const data = vocabulary.map(v => `${v.word}\t${v.definition}\t${v.example || ''}`).join('\n');
+const blob = new Blob([data], { type: 'text/plain' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'vocabulary.txt';
+a.click();
+URL.revokeObjectURL(url);
+}
+
+// ============ ARTICLES ============
+let loadedArticles = [];
+
+async function loadArticles() {
+const container = document.getElementById('articles-grid');
+const homeContainer = document.getElementById('home-articles');
+
+try {
+// Fetch articles from API
+const response = await fetch('/api/articles');
+if (response.ok) {
+loadedArticles = await response.json();
+} else {
+console.warn('Failed to fetch articles from API, using fallback');
+loadedArticles = [];
+}
+} catch (e) {
+console.warn('Error loading articles:', e);
+loadedArticles = [];
+}
+
+const levelMap = { beginner: '初级 A2', intermediate: '中高级 B2', advanced: '高级 C1' };
+const levelClass = { beginner: 'text-tertiary', intermediate: 'text-primary', advanced: 'text-error' };
+
+// Default to intermediate if no level specified
+const getLevel = (article) => article.level || 'intermediate';
+
+const articlesHTML = loadedArticles.map((article, index) => {
+const wordCount = article.wordCount || article.content.split(/\s+/).length;
+const readTime = Math.ceil(wordCount / 200);
+const level = getLevel(article);
+return `
+<div class="group bg-surface-container border border-outline-variant rounded-xl overflow-hidden hover:border-primary/50 transition-colors cursor-pointer" onclick="openArticle(${index})">
+<div class="relative h-40 w-full overflow-hidden bg-gradient-to-br from-primary/20 to-tertiary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary/50 text-6xl">article</span>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-background/80 backdrop-blur-md text-[10px] font-bold ${levelClass[level]} px-2 py-1 rounded border border-current/30">${levelMap[level]}</span>
+</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors line-clamp-2">${article.title}</h3>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-[11px] text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-xs">history_edu</span>
+${wordCount} words
+</div>
+<div class="flex items-center gap-1 text-[11px] text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-xs">schedule</span>
+${readTime} min
+</div>
+</div>
+</div>
+</div>
+`;
+}).join('');
+
+container.innerHTML = articlesHTML || '<div class="col-span-3 text-center py-12"><p class="text-[#71717a]">暂无文章，请将 .md 文件放入 articles 文件夹</p></div>';
+homeContainer.innerHTML = articlesHTML;
+document.getElementById('article-count').textContent = `${loadedArticles.length} 篇文章`;
+}
+
+function openArticle(index) {
+currentArticle = loadedArticles[index];
+const words = currentArticle.content.split(/\s+/);
+const wordCount = words.length;
+const readTime = Math.ceil(wordCount / 200);
+
+// Find vocabulary words in this article
+const vocabWords = new Set(vocabulary.map(v => v.word.toLowerCase()));
+
+// Convert paragraphs - treat first line as title, remove it from content
+const allLines = currentArticle.content.split('\n');
+const titleLine = allLines[0]?.replace(/^#\s*/, '').trim() || '';
+
+// Highlight known vocabulary only in the rest content (not title)
+let restContent = allLines.slice(1).join('\n').trim();
+vocabWords.forEach(word => {
+const regex = new RegExp(`\\b(${word})\\b`, 'gi');
+restContent = restContent.replace(regex, '<span class="word-highlight" data-word="$1">$1</span>');
+});
+
+// Render Markdown content
+const renderedContent = marked.parse(restContent);
+
+document.getElementById('article-title').textContent = titleLine || currentArticle.title;
+document.getElementById('article-content').innerHTML = renderedContent;
+document.getElementById('word-count').textContent = wordCount;
+document.getElementById('read-time').textContent = readTime;
+
+// Setup word selection
+setupWordSelection();
+
+// Show reading view
+document.getElementById('reading-list').classList.add('hidden');
+document.getElementById('reading-view').classList.remove('hidden');
+}
+
+function showReadingList() {
+document.getElementById('reading-view').classList.add('hidden');
+document.getElementById('reading-list').classList.remove('hidden');
+}
+
+function setupWordSelection() {
+document.querySelectorAll('.word-highlight').forEach(el => {
+el.addEventListener('click', function(e) {
+e.stopPropagation();
+const word = this.dataset.word;
+const vocabItem = vocabulary.find(v => v.word.toLowerCase() === word.toLowerCase());
+if (vocabItem) {
+showVocabAnnotation(word, vocabItem.definition, vocabItem.example, vocabItem.mastery);
+}
+});
+});
+}
+
+function showVocabAnnotation(word, definition, example, mastery) {
+const card = document.getElementById('vocab-annotation-card');
+const content = document.getElementById('vocab-annotation-content');
+card.classList.remove('hidden');
+
+// Mastery level text
+const masteryTexts = ['新词', '学习中', '熟悉', '掌握', '精通'];
+const masteryText = masteryTexts[mastery] || '新词';
+
+content.innerHTML = `
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant">
+<p class="text-xs text-secondary mb-1">词汇注释:</p>
+<p class="text-xl font-black text-on-background tracking-tight">${word}</p>
+<div class="mt-3 space-y-2">
+<p class="text-sm text-on-surface-variant italic">${definition}</p>
+${example ? `<p class="text-xs text-outline">例句: "${example}"</p>` : ''}
+</div>
+<div class="mt-3 pt-3 border-t border-outline-variant flex items-center justify-between">
+<span class="text-xs text-secondary">掌握程度:</span>
+<span class="text-xs font-medium text-tertiary">${masteryText}</span>
+</div>
+</div>
+`;
+}
+
+function showWordPanel(word, definition, example) {
+const panel = document.getElementById('word-panel-content');
+panel.innerHTML = `
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant mb-4">
+<p class="text-xs text-secondary mb-1">已选单词:</p>
+<p class="text-xl font-black text-on-background tracking-tight">${word}</p>
+<div class="mt-3 space-y-2">
+<p class="text-sm text-on-surface-variant italic">${definition}</p>
+${example ? `<p class="text-xs text-outline">例句: "${example}"</p>` : ''}
+</div>
+</div>
+<div class="grid grid-cols-1 gap-2">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-on-primary text-sm font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors active:scale-[0.98]" onclick="updateWordMasteryByWord('${escapeHtml(word)}', 1)">
+<span class="material-symbols-outlined text-sm">check_circle</span> 已掌握
+</button>
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-transparent border border-outline-variant text-secondary text-sm font-medium rounded-lg hover:bg-surface-container-high transition-all" onclick="clearSelectionPanel()">
+<span class="material-symbols-outlined text-sm">close</span> 清除选择
+</button>
+</div>
+`;
+}
+
+function updateWordMasteryByWord(word, change) {
+const item = vocabulary.find(v => v.word.toLowerCase() === word.toLowerCase());
+if (item) {
+updateWordMastery(item.id, change);
+}
+}
+
+// ============ ADD WORD MODAL ============
+function openAddWordModalFromPanel(word) {
+selectedWord = word;
+document.getElementById('modal-word').value = word;
+document.getElementById('modal-definition').value = '';
+document.getElementById('modal-example').value = '';
+document.getElementById('add-word-modal').classList.remove('hidden');
+// Focus on definition input
+setTimeout(() => {
+document.getElementById('modal-definition').focus();
+}, 100);
+}
+
+function closeAddWordModal() {
+document.getElementById('add-word-modal').classList.add('hidden');
+}
+
+function saveWord() {
+const word = document.getElementById('modal-word').value;
+const definition = document.getElementById('modal-definition').value;
+const example = document.getElementById('modal-example').value;
+
+if (!definition.trim()) {
+alert('请输入单词释义');
+return;
+}
+
+addToVocabulary(word, definition, example);
+closeAddWordModal();
+showNotification(`"${word}" 已添加到单词本`);
+}
+
+// ============ QUIZ ============
+function startQuiz() {
+quizMode = document.getElementById('quiz-mode').value;
+const count = document.getElementById('quiz-count').value;
+const countNum = count === 'all' ? vocabulary.length : parseInt(count);
+
+if (vocabulary.length === 0) {
+alert('单词本为空，请先添加单词');
+return;
+}
+
+// Shuffle and pick words
+const shuffled = [...vocabulary].sort(() => Math.random() - 0.5);
+quizWords = shuffled.slice(0, Math.min(countNum, vocabulary.length));
+quizTotal = quizWords.length;
+quizIndex = 0;
+quizScore = 0;
+quizResults = [];
+
+// Switch to active screen
+document.getElementById('quiz-screen-setup').style.display = 'none';
+document.getElementById('quiz-screen-complete').style.display = 'none';
+document.getElementById('quiz-screen-active').style.display = 'block';
+
+document.getElementById('quiz-total').textContent = quizTotal;
+showQuizQuestion();
+}
+
+function showQuizQuestion() {
+const word = quizWords[quizIndex];
+
+document.getElementById('quiz-current').textContent = quizIndex + 1;
+document.getElementById('quiz-score').textContent = `正确: ${quizScore}`;
+document.getElementById('quiz-progress-bar').style.width = ((quizIndex + 1) / quizTotal * 100) + '%';
+
+document.getElementById('quiz-word').textContent = word.word;
+document.getElementById('quiz-example').textContent = word.example ? `"${word.example}"` : '';
+
+document.getElementById('quiz-input-area').style.display = 'block';
+document.getElementById('quiz-result-area').style.display = 'none';
+document.getElementById('quiz-answer').value = '';
+document.getElementById('quiz-answer').focus();
+}
+
+function submitQuizAnswer() {
+const answer = document.getElementById('quiz-answer').value.trim().toLowerCase();
+const correct = quizWords[quizIndex].definition.toLowerCase();
+const isCorrect = answer.includes(correct) || correct.includes(answer) || levenshtein(answer, correct) < 3;
+
+if (isCorrect) {
+quizScore++;
+quizResults.push(true);
+document.getElementById('quiz-result-icon').innerHTML = '<span class="material-symbols-outlined text-tertiary text-4xl" style="font-variation-settings: \'FILL\' 1;">check_circle</span>';
+document.getElementById('quiz-result-icon').className = 'w-16 h-16 rounded-full bg-tertiary/10 flex items-center justify-center mx-auto mb-4';
+document.getElementById('quiz-result-text').textContent = '正确!';
+document.getElementById('quiz-result-text').className = 'text-xl font-bold text-tertiary';
+} else {
+quizResults.push(false);
+document.getElementById('quiz-result-icon').innerHTML = '<span class="material-symbols-outlined text-error text-4xl" style="font-variation-settings: \'FILL\' 1;">cancel</span>';
+document.getElementById('quiz-result-icon').className = 'w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mx-auto mb-4';
+document.getElementById('quiz-result-text').textContent = '错误';
+document.getElementById('quiz-result-text').className = 'text-xl font-bold text-error';
+}
+
+document.getElementById('quiz-correct-answer').textContent = `正确答案: ${quizWords[quizIndex].definition}`;
+document.getElementById('quiz-input-area').style.display = 'none';
+document.getElementById('quiz-result-area').style.display = 'block';
+document.getElementById('quiz-score').textContent = `正确: ${quizScore}`;
+}
+
+function nextQuestion() {
+quizIndex++;
+if (quizIndex >= quizTotal) {
+showQuizComplete();
+} else {
+showQuizQuestion();
+}
+}
+
+function showQuizComplete() {
+document.getElementById('quiz-screen-active').style.display = 'none';
+document.getElementById('quiz-screen-complete').style.display = 'block';
+
+const percent = Math.round(quizScore / quizTotal * 100);
+document.getElementById('final-score').textContent = percent + '%';
+document.getElementById('final-correct').textContent = `${quizScore} / ${quizTotal}`;
+
+// Update mastery based on quiz results
+quizWords.forEach((word, i) => {
+const correct = quizResults[i];
+updateWordMastery(word.id, correct ? 1 : -1);
+});
+quizResults = []; // Reset for next quiz
+}
+
+function resetQuiz() {
+document.getElementById('quiz-screen-active').style.display = 'none';
+document.getElementById('quiz-screen-complete').style.display = 'none';
+document.getElementById('quiz-screen-setup').style.display = 'block';
+}
+
+// ============ UTILITIES ============
+function updateStats() {
+const total = vocabulary.length;
+const mastered = vocabulary.filter(v => v.mastery >= 4).length;
+const reviewing = vocabulary.filter(v => v.mastery > 0 && v.mastery < 4).length;
+const today = new Date().setHours(0,0,0,0);
+const todayAdded = vocabulary.filter(v => v.addedAt >= today).length;
+
+document.getElementById('stats-total').textContent = total;
+document.getElementById('stats-today').textContent = todayAdded;
+document.getElementById('home-total-words').textContent = total;
+document.getElementById('home-mastered').textContent = mastered;
+document.getElementById('home-review').textContent = reviewing;
+}
+
+function getTimeAgo(timestamp) {
+const seconds = Math.floor((Date.now() - timestamp) / 1000);
+if (seconds < 60) return '刚刚';
+if (seconds < 3600) return Math.floor(seconds / 60) + ' 分钟前';
+if (seconds < 86400) return Math.floor(seconds / 3600) + ' 小时前';
+if (seconds < 604800) return Math.floor(seconds / 86400) + ' 天前';
+return new Date(timestamp).toLocaleDateString('zh-CN');
+}
+
+function levenshtein(a, b) {
+const matrix = [];
+for (let i = 0; i <= b.length; i++) {
+matrix[i] = [i];
+}
+for (let j = 0; j <= a.length; j++) {
+matrix[0][j] = j;
+}
+for (let i = 1; i <= b.length; i++) {
+for (let j = 1; j <= a.length; j++) {
+if (b.charAt(i - 1) === a.charAt(j - 1)) {
+matrix[i][j] = matrix[i - 1][j - 1];
+} else {
+matrix[i][j] = Math.min(
+matrix[i - 1][j - 1] + 1,
+matrix[i][j - 1] + 1,
+matrix[i - 1][j] + 1
+);
+}
+}
+}
+return matrix[b.length][a.length];
+}
+
+function showNotification(message) {
+const notification = document.createElement('div');
+notification.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 bg-tertiary text-on-tertiary rounded-lg shadow-2xl z-50 animate-pulse';
+notification.textContent = message;
+document.body.appendChild(notification);
+setTimeout(() => notification.remove(), 3000);
+}
+
+// ============ TEXT SELECTION HANDLER ============
+let pendingSelection = '';
+
+document.addEventListener('mouseup', function(e) {
+setTimeout(() => {
+const selection = window.getSelection().toString().trim();
+// Process selected text (single words or phrases with spaces), length 1-100 characters
+if (selection && selection.length > 0 && selection.length < 100 && !selection.includes('\n')) {
+pendingSelection = selection;
+showSelectionPanel(selection);
+} else if (!selection) {
+clearSelectionPanel();
+}
+}, 100);
+});
+
+function showSelectionPanel(word) {
+const panel = document.getElementById('word-panel-content');
+panel.innerHTML = `
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant mb-4">
+<p class="text-xs text-secondary mb-1">已选单词:</p>
+<p class="text-xl font-black text-on-background tracking-tight">${word}</p>
+</div>
+<div class="grid grid-cols-1 gap-2">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-on-primary text-sm font-bold rounded-lg hover:bg-primary-fixed-dim transition-colors active:scale-[0.98]" onclick="openAddWordModalFromPanel('${escapeHtml(word)}')">
+<span class="material-symbols-outlined text-sm">bookmark_add</span> 添加到单词本
+</button>
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-transparent border border-outline-variant text-secondary text-sm font-medium rounded-lg hover:bg-surface-container-high transition-all" onclick="clearSelectionPanel()">
+<span class="material-symbols-outlined text-sm">close</span> 清除选择
+</button>
+</div>
+`;
+}
+
+function clearSelectionPanel() {
+pendingSelection = '';
+document.getElementById('word-panel-content').innerHTML = `
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant text-center">
+<p class="text-sm text-[#71717a]">选择文章中的单词查看释义</p>
+</div>
+`;
+}
+
+function escapeHtml(text) {
+const div = document.createElement('div');
+div.textContent = text;
+return div.innerHTML.replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+</script>
+</body>
+</html>

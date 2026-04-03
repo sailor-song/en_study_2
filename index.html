@@ -1108,9 +1108,10 @@ document.getElementById('read-time').textContent = readTime;
 // Setup word selection
 setupWordSelection();
 
-// Show reading view
+// Show reading view and navigate to reading page
 document.getElementById('reading-list').classList.add('hidden');
 document.getElementById('reading-view').classList.remove('hidden');
+navigateTo('reading');
 }
 
 function showReadingList() {

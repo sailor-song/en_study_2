@@ -21,16 +21,24 @@ python server.py
 ## 功能模块
 
 ### 首页 (Home)
+<img width="3139" height="1415" alt="image" src="https://github.com/user-attachments/assets/3cf38508-aa25-4ed6-ae4b-f1f199fdb531" />
+
 - 文章卡片展示，显示标题、阅读时长、单词数
 - 点击卡片直接进入阅读页
 
 ### 阅读页 (Reading)
+<img width="3141" height="1475" alt="image" src="https://github.com/user-attachments/assets/064de4c6-11d3-4bf1-9021-7538c72a917f" />
+<img width="3120" height="1553" alt="image" src="https://github.com/user-attachments/assets/cb9d32d6-ac5d-4e6f-bc6d-5f7bbf2ae4db" />
+
+
 - 渲染 Markdown 格式的文章内容
 - **词汇高亮**：单词本中已收藏的词汇会高亮显示
 - **词汇注释**：点击高亮词汇查看释义和掌握程度
 - **划词助手**：选中文中任意单词/词组，添加至单词本
 
 ### 单词本 (Vocabulary)
+<img width="3145" height="1518" alt="image" src="https://github.com/user-attachments/assets/350e10c2-45fe-4313-89b2-196b5c40e95b" />
+
 - 集中管理已收藏的词汇
 - 查看释义、例句、掌握程度
 - 支持搜索、编辑、删除
@@ -38,6 +46,8 @@ python server.py
 - 清除功能：一键清空所有词汇
 
 ### 测试 (Quiz)
+<img width="3170" height="1133" alt="image" src="https://github.com/user-attachments/assets/355e1b2d-3a47-4f18-80a1-f078248dcdad" />
+
 - 拼写测验：根据中文释义拼写英文单词
 - 支持选择测验数量（全量/10/20/50）
 - 答题结果自动更新词汇掌握程度
